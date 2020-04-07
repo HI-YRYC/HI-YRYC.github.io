@@ -5,15 +5,13 @@ You can use the [editor on GitHub](https://github.com/HI-YRYC/HI-YRYC.github.io/
 Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
 
 ### Hello,World!
-
-Syntax highlighted code block
-# Hello,World!
 ## Hello,YRYC!
+
 The first blog on github.
 
 **这是加粗的文字**
 *这是倾斜的文字*`
-~~这是斜体加粗的文字~~
+***这是斜体加粗的文字***
 ~~这是加删除线的文字~~
 
 ### Markdown
