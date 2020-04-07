@@ -4,6 +4,16 @@ You can use the [editor on GitHub](https://github.com/HI-YRYC/HI-YRYC.github.io/
 
 Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
 
+### Hello,World!
+
+```markdown
+Syntax highlighted code block
+# Hello,World!
+## Hello,YRYC!
+The first blog on github.
+
+```
+
 ### Markdown
 
 Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
