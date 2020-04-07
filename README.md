@@ -6,13 +6,15 @@ Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://j
 
 ### Hello,World!
 
-```markdown
 Syntax highlighted code block
 # Hello,World!
 ## Hello,YRYC!
 The first blog on github.
 
-```
+**这是加粗的文字**
+*这是倾斜的文字*`
+~~这是斜体加粗的文字~~
+~~这是加删除线的文字~~
 
 ### Markdown
 
@@ -30,11 +32,6 @@ Syntax highlighted code block
 
 1. Numbered
 2. List
-
-**这是加粗的文字**
-*这是倾斜的文字*`
-~~这是斜体加粗的文字~~
-~~这是加删除线的文字~~
 
 **Bold** and _Italic_ and `Code` text
 
