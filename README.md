@@ -1,4 +1,4 @@
-## Welcome to GitHub Pages
+## HI-YRYC
 
 You can use the [editor on GitHub](https://github.com/HI-YRYC/HI-YRYC.github.io/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
 
