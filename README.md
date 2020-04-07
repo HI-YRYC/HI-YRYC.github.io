@@ -23,7 +23,7 @@ Syntax highlighted code block
 
 **这是加粗的文字**
 *这是倾斜的文字*`
-***这是斜体加粗的文字***
+~~这是斜体加粗的文字~~
 ~~这是加删除线的文字~~
 
 **Bold** and _Italic_ and `Code` text
