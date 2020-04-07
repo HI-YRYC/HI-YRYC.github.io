@@ -18,8 +18,13 @@ Syntax highlighted code block
 - Bulleted
 - List
 
-~~1. Numbered~~
+1. Numbered
 2. List
+
+**这是加粗的文字**
+*这是倾斜的文字*`
+***这是斜体加粗的文字***
+~~这是加删除线的文字~~
 
 **Bold** and _Italic_ and `Code` text
 
