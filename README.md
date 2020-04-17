@@ -4,16 +4,22 @@ You can use the [editor on GitHub](https://github.com/HI-YRYC/HI-YRYC.github.io/
 
 Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
 
-##LEARNING Chapter 1  
-###What are HTML、HTML5、XHTML、CSS、SQL、JavaScript、PHP、ASP.NET、Web Services in website building technology?
+## LEARNING Chapter 1  
+### What are HTML、HTML5、XHTML、CSS、SQL、JavaScript、PHP、ASP.NET、Web Services in website building technology?
+
                 HTTP REQUEST                QUERY DATA
+
               ------------------>       ------------------>
+
   ComputerUser    Internet        Server                   Database
+
               <------------------       <------------------
+
                 HTTP RESPONSE               RETURN DATA
                 
+
     1.HTML:标记语言
-      eg.[/img]图片地址 [/url]超链接 [/del]~~del~~删除效果
+      eg.[/img]图片地址 [/url]超链接 [/del]删除效果
       With out using CSS,it will display according to the browser's default style,like lists,pictures,urls,input boxes,bottons,etc.
       The style is ugly.  
     2.CSS:CSS has the same format as(property:value)
