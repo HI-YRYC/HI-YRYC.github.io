@@ -11,7 +11,7 @@ Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://j
 
               ------------------>       ------------------>
 
-  ComputerUser    Internet        Server                   Database
+  Computer User         Internet              Server                     Database
 
               <------------------       <------------------
 
@@ -45,13 +45,15 @@ Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://j
       4.JavaScript
       By js we can make dynamic pages.We write js save as ***.js,in HTML we can combine it with <script>.
       When mouse hover on the label it will create a new little <div> window.
-      Use js request to server,we get data in this  little <div> window.This also called AJAX.Without refreshing the page,just refresh a       part of page.
+      Use js request to server,we get data in this  little <div> window.This also called AJAX.Without refreshing the page,just refresh a part of page.
+      /*
       **Above are front-end,next are back-end.**
+      */
       5.Web Server and Web Services
       Browser sends request to server.They all obey HTTP rules.
       eg.200 means OK.404 means Not found.
       There are so many things in HTTP RESPONSE.Content-type includes(txt,cartoon,pictures,mp3...)
-      Web Server return HTML codes by url.It can be your PC or any other electronic equipments.It also can provide cache and load             balancing.There is a lot open source Web Servers such as Apache,NgnixIIS.Also,you can create a new one by Node.js.Cause Web             Server needs good performace,generally written in C,C++ and Java.
+      Web Server return HTML codes by url.It can be your PC or any other electronic equipments.It also can provide cache and load balancing.There is a lot open source Web Servers such as Apache,NgnixIIS.Also,you can create a new one by Node.js.Cause Web Server needs good performace,generally written in C,C++ and Java.
       6.PHP,Server Scripts,Web Framework
       Server Scripts return different pages by query data from database.
       PHP is one of Server Scripts.
