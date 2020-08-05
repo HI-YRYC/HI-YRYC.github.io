@@ -38,7 +38,7 @@ Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://j
           border-bottom:1px solid rgb(4,78,151);
           box-shadow:0px 1px 2px rgba(0,0,0,0.25),0px 1px 0px rgba(255,255,255,0.15) inset;
       }
-      With CSS the tyle will be more neatly.
+      With CSS the style will be more neatly.
       3.HTML5 and XHTML
       HTML5 is a version of HTML.
       XHTML is a composion from XML and HTML.Strict syntax requirments,some syntax differences from HTML,for XML compatibility.
