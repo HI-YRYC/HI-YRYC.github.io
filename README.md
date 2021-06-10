@@ -1,12 +1,12 @@
-##NGROK食用指北
-windows  powershell
-cd 进入ngrok.exe目录
+##NGROK食用指北   
+windows  powershell   
+cd 进入ngrok.exe目录   
 
---  不确认此步骤是否必要  但我成功前确实执行过一遍
-./ngrok authtoken  官网查下token
-
---  80换为本机需要的端口
-./ngrok http 80
+--  不确认此步骤是否必要  但我成功前确实执行过一遍    
+./ngrok authtoken  官网查下token   
+   
+--  80换为本机需要的端口   
+./ngrok http 80   
 
 -- 官网相关
 https://dashboard.ngrok.com/get-started/setup
