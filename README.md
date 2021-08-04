@@ -1,3 +1,79 @@
+## ES语句食用指北
+最近突然要写ES语句了，不会写啊摔。
+就觉得应该有其他语句转ES的工具网站。
+于是我就找着了。
+http://www.ischoolbar.com/EsParser/
+
+Mysql语句：
+select * from A where time between "100"  and "200" and customerId ="hello" or (customerId = "world" and world = 100);
+对应ES语句：
+{
+	"query": {
+		"bool": {
+			"filter": [{
+				"range": {
+					"time": {
+						"gte": "100",
+						"lte": "200"
+					}
+				}
+			}, {
+				"bool": {
+					"must": [{
+						"bool": {
+							"should": [{
+								"match_phrase": {
+									"customerId": {
+										"query": "hello"
+									}
+								}
+							}]
+						}
+					}]
+				}
+			}, {
+				"bool": {
+					"must": [{
+						"match_phrase": {
+							"customerId": {
+								"query": "world"
+							}
+						}
+					}]
+				}
+			}, {
+				"bool": {
+					"must": [{
+						"match_phrase": {
+							"world": {
+								"query": "100"
+							}
+						}
+					}]
+				}
+			}]
+		}
+	},
+	"_source": {
+		"include": ["*"]
+	}
+}
+
+总结：
+嘛先梳理下结构
+├──query          查询
+├──bool           布尔值（filter 与 _source）
+├────filter       过滤
+└────────range    范围时间
+├────────bool     
+└────────should   存在？
+├────────bool     
+└────────must     直等于
+└──_source
+
+感觉sql语句解析的并不正确未体现出or的效果
+去打牌了，今天先记到这儿，坑下次再补上
+
 ## NGROK食用指北   
 windows  powershell   
 cd 进入ngrok.exe目录   
