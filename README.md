@@ -1,3 +1,96 @@
+##项目添加全局日志链路
+dubbo文件中加入filter
+
+```
+<dubbo:provider timeout="5000" filter="dubboFilter"/>
+```
+
+log输出格式中加入
+
+```
+%X{traceId}
+```
+
+resources/META-INF/dubbo  文件夹下加入文件
+
+com.alibaba.dubbo.rpc.Filter
+
+```
+dubboFilter=com.behosoft.framework.web.interceptor.DubboFilter
+```
+
+在对应位置加入DubboFilter
+
+```
+package com.behosoft.framework.web.interceptor;
+
+import com.alibaba.dubbo.rpc.*;
+import com.behosoft.util.StringUtils;
+import org.slf4j.MDC;
+
+public class DubboFilter implements Filter {
+
+    @Override
+    public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
+        RpcContext context = RpcContext.getContext();
+        String traceId = context.getAttachment("traceId");
+        if(StringUtils.isNotBlank(traceId)){
+            TraceIdUtil.setTraceId(traceId);
+            MDC.put("traceId",traceId);
+        }else {
+            System.err.println("something must be wrong ========== "  +  invocation.getMethodName());
+        }
+        Result result = invoker.invoke(invocation);
+        return result;
+    }
+}
+```
+
+相关工具类
+
+```
+TraceIdUtil
+```
+
+```
+package com.behosoft.framework.web.interceptor;
+
+import com.behosoft.util.StringUtils;
+import org.slf4j.MDC;
+
+import java.util.UUID;
+
+public class TraceIdUtil {
+    private static final String TRACE_ID = "traceId";
+
+    private static final String DEFAULT_TRACE_ID = "0";
+
+    public static void setTraceId(String traceId) {
+        traceId = StringUtils.isBlank(traceId) ? DEFAULT_TRACE_ID : traceId;
+        MDC.put(TRACE_ID,traceId);
+    }
+
+    public static String getTraceId() {
+        String traceId = MDC.get(TRACE_ID);
+        return StringUtils.isBlank(traceId) ? DEFAULT_TRACE_ID : traceId;
+    }
+
+    public static boolean defaultTraceId(String traceId) {
+        return DEFAULT_TRACE_ID.equals(traceId);
+    }
+
+    public static String genTraceId() {
+        return UUID.randomUUID().toString().replace("-", "");
+    }
+}
+```
+
+坑点： 不可直接在有多个调用的地方加入MDC，以及RpcContext
+
+因为他们父子线程之间的信息彬彬不是共享的，因此可以使用traceUtil先生成一个
+
+但是不知到这个线程是否安全，有待观察
+
 ## ES语句食用指北
 最近突然要写ES语句了，不会写啊摔。
 就觉得应该有其他语句转ES的工具网站。
