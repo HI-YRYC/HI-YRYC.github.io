@@ -87,7 +87,7 @@ public class TraceIdUtil {
 
 坑点： 不可直接在有多个调用的地方加入MDC，以及RpcContext
 
-因为他们父子线程之间的信息彬彬不是共享的，因此可以使用traceUtil先生成一个
+因为他们父子线程之间的信息并不是共享的，因此可以使用traceUtil先生成一个
 
 但是不知到这个线程是否安全，有待观察
 
