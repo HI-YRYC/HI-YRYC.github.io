@@ -16,16 +16,16 @@ resources/META-INF/dubbo  文件夹下加入文件
 com.alibaba.dubbo.rpc.Filter
 
 ```
-dubboFilter=com.behosoft.framework.web.interceptor.DubboFilter
+dubboFilter=com.***.framework.web.interceptor.DubboFilter
 ```
 
 在对应位置加入DubboFilter
 
 ```
-package com.behosoft.framework.web.interceptor;
+package com.***.framework.web.interceptor;
 
 import com.alibaba.dubbo.rpc.*;
-import com.behosoft.util.StringUtils;
+import com.***.util.StringUtils;
 import org.slf4j.MDC;
 
 public class DubboFilter implements Filter {
@@ -53,9 +53,9 @@ TraceIdUtil
 ```
 
 ```
-package com.behosoft.framework.web.interceptor;
+package com.***.framework.web.interceptor;
 
-import com.behosoft.util.StringUtils;
+import com.***.util.StringUtils;
 import org.slf4j.MDC;
 
 import java.util.UUID;
