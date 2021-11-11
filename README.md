@@ -85,7 +85,7 @@ public class TraceIdUtil {
 }
 ```
 
-坑点： 不可直接在有多个调用的地方加入MDC，以及RpcContext
+坑点： 不可直接在有多个调用的地方加入MDC，以及RpcContext，支持的日志工具类有所受限支持org.apache.commons.logging.Log
 
 因为他们父子线程之间的信息并不是共享的，因此可以使用traceUtil先生成一个
 
