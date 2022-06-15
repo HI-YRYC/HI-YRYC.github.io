@@ -1,3 +1,65 @@
+## 中间件数据查询
+1. redis
+-- 命令行进入
+```
+redis-cli -h 127.0.0.1 -p 6379
+```
+-- DOCKER进入
+```
+docker exec -it id redis-cli
+```
+-- 若有密码
+```
+auth 密码
+```
+-- 查询
+```
+select 1
+keys *
+get key
+```
+2. mongo
+-- 命令行进入
+```
+mongo
+```
+-- DOCKER进入
+```
+docker exec -it id mongo
+```
+-- 查询
+```
+show dbs
+use database
+show tables
+db.tableName.find({"key1" : "value1","key2" : "value2"})
+db.tableName.remove({"_id" : "needRemoveId"})
+```
+3. es
+-- 查看索引
+```
+curl -XGET 127.0.0.1:9200/_cat/indices
+```
+-- 查结构
+```
+curl -XGET 127.0.0.1:9200/idx_cwms?pretty
+```
+-- 删除超时
+```
+&wait_for_completion=false
+```
+-- 查询语句是否结束  
+```
+curl -XGET 127.0.0.1:9200/_tasks/MVnZKEWySweaodICKYuOQA:138?pretty
+```
+-- 查询报错超出最大值
+```
+curl -XPUT http://127.0.0.1:9200/idx_cwms/_settings -d '{ "index" : { "max_result_window" : 1000000}}'
+```
+-- Tips
+1. 时间默认为ms
+2. 删除结束后要重启els
+
 ## 前端调用摄像头录像并保存到本地
 
 ```
