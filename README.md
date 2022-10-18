@@ -1,3 +1,203 @@
+## 按天生成log4j日志并限制最大日志数
+> log4j.properties
+```
+log4j.appender.file=org.apache.log4j.DailyRollingFileAppender2
+log4j.appender.file.File=${catalina.home}/log/logName.log
+log4j.appender.file.Append=true
+log4j.appender.file.MaxBackupIndex=30
+log4j.appender.file.layout=org.apache.log4j.PatternLayout
+log4j.appender.file.layout.ConversionPattern=%d{ABSOLUTE} %5p %c{1}:%L - %m%n
+```
+> 工具类
+```
+package org.apache.log4j;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InterruptedIOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
+
+import org.apache.log4j.helpers.LogLog;
+import org.apache.log4j.spi.LoggingEvent;
+
+public class DailyRollingFileAppender2 extends DailyRollingFileAppender {
+
+    /**
+     * 保留备份文件个数
+     */
+    protected int maxBackupIndex;
+
+    public int getMaxBackupIndex() {
+        return maxBackupIndex;
+    }
+
+    public void setMaxBackupIndex(int maxBackupIndex) {
+        this.maxBackupIndex = maxBackupIndex;
+    }
+
+    static final int TOP_OF_TROUBLE = -1;
+    static final int TOP_OF_MINUTE = 0;
+    static final int TOP_OF_HOUR = 1;
+    static final int HALF_DAY = 2;
+    static final int TOP_OF_DAY = 3;
+    static final int TOP_OF_WEEK = 4;
+    static final int TOP_OF_MONTH = 5;
+    private String datePattern = "'.'yyyy-MM-dd";
+    private String scheduledFilename;
+    private long nextCheck = System.currentTimeMillis() - 1L;
+    Date now = new Date();
+    SimpleDateFormat sdf;
+    RollingCalendar rc = new RollingCalendar();
+    int checkPeriod = -1;
+    static final TimeZone gmtTimeZone = TimeZone.getTimeZone("GMT");
+
+    public DailyRollingFileAppender2() {
+    }
+
+    public DailyRollingFileAppender2(Layout layout, String filename, String datePattern) throws IOException {
+        super(layout, filename, datePattern);
+        this.datePattern = datePattern;
+        this.activateOptions();
+    }
+
+    public void setDatePattern(String pattern) {
+        this.datePattern = pattern;
+    }
+
+    public String getDatePattern() {
+        return this.datePattern;
+    }
+
+    public void activateOptions() {
+        super.activateOptions();
+        if (this.datePattern != null && this.fileName != null) {
+            this.now.setTime(System.currentTimeMillis());
+            this.sdf = new SimpleDateFormat(this.datePattern);
+            int type = this.computeCheckPeriod();
+            this.printPeriodicity(type);
+            this.rc.setType(type);
+            File file = new File(this.fileName);
+            this.scheduledFilename = this.fileName + this.sdf.format(new Date(file.lastModified()));
+        } else {
+            LogLog.error("Either File or DatePattern options are not set for appender [" + this.name + "].");
+        }
+
+    }
+
+    void printPeriodicity(int type) {
+        switch(type) {
+            case 0:
+                LogLog.debug("Appender [" + this.name + "] to be rolled every minute.");
+                break;
+            case 1:
+                LogLog.debug("Appender [" + this.name + "] to be rolled on top of every hour.");
+                break;
+            case 2:
+                LogLog.debug("Appender [" + this.name + "] to be rolled at midday and midnight.");
+                break;
+            case 3:
+                LogLog.debug("Appender [" + this.name + "] to be rolled at midnight.");
+                break;
+            case 4:
+                LogLog.debug("Appender [" + this.name + "] to be rolled at start of week.");
+                break;
+            case 5:
+                LogLog.debug("Appender [" + this.name + "] to be rolled at start of every month.");
+                break;
+            default:
+                LogLog.warn("Unknown periodicity for appender [" + this.name + "].");
+        }
+
+    }
+
+    int computeCheckPeriod() {
+        RollingCalendar rollingCalendar = new RollingCalendar(gmtTimeZone, Locale.getDefault());
+        Date epoch = new Date(0L);
+        if (this.datePattern != null) {
+            for(int i = 0; i <= 5; ++i) {
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(this.datePattern);
+                simpleDateFormat.setTimeZone(gmtTimeZone);
+                String r0 = simpleDateFormat.format(epoch);
+                rollingCalendar.setType(i);
+                Date next = new Date(rollingCalendar.getNextCheckMillis(epoch));
+                String r1 = simpleDateFormat.format(next);
+                if (r0 != null && r1 != null && !r0.equals(r1)) {
+                    return i;
+                }
+            }
+        }
+
+        return -1;
+    }
+
+    void rollOver() throws IOException {
+
+        if (this.maxBackupIndex <= 0) {
+            return;
+        }
+        File file = new File(this.fileName);
+        String simpleFileName = file.getName().replace(".log","");
+
+        File parentPath = new File(file.getParent());
+        // check path
+        if (!parentPath.exists()) {
+            LogLog.error("Appender file: " + fileName + " don't exist");
+            return;
+        }
+
+        AtomicInteger fileCount = new AtomicInteger(this.maxBackupIndex);
+
+        try (Stream<File> files = Stream.of(parentPath.listFiles())) {
+            //过滤出以simpleFileName 开头的文件,且不包含simpleFileName 本身
+            files.filter(logFile -> !logFile.getName().equals(simpleFileName) && logFile.getName().startsWith(simpleFileName))
+                    //按照修改时间倒叙
+                    .sorted((l1, l2) -> Long.valueOf(l2.lastModified()).compareTo(l1.lastModified()))
+                    //保留前 maxBackupIndex 个文件
+                    .forEach(logFile -> {
+                        if (fileCount.getAndDecrement() > 0) {
+                            //保留最近的文件
+                            return;
+                        }
+                        try {
+                            //删除多余的文件
+                            logFile.delete();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    protected void subAppend(LoggingEvent event) {
+        long n = System.currentTimeMillis();
+        if (n >= this.nextCheck) {
+            this.now.setTime(n);
+            this.nextCheck = this.rc.getNextCheckMillis(this.now);
+
+            try {
+                this.rollOver();
+            } catch (IOException var5) {
+                if (var5 instanceof InterruptedIOException) {
+                    Thread.currentThread().interrupt();
+                }
+
+                LogLog.error("rollOver() failed.", var5);
+            }
+        }
+
+        super.subAppend(event);
+    }
+}
+```
+
+
 ## 中间件数据查询
 1. redis
 -- 命令行进入
