@@ -242,7 +242,7 @@ curl -XGET 127.0.0.1:9200/_cat/indices
 ```
 -- 查结构
 ```
-curl -XGET 127.0.0.1:9200/idx_cwms?pretty
+curl -XGET 127.0.0.1:9200/索引名称?pretty
 ```
 -- 删除超时
 ```
@@ -254,7 +254,11 @@ curl -XGET 127.0.0.1:9200/_tasks/MVnZKEWySweaodICKYuOQA:138?pretty
 ```
 -- 查询报错超出最大值
 ```
-curl -XPUT http://127.0.0.1:9200/idx_cwms/_settings -d '{ "index" : { "max_result_window" : 1000000}}'
+curl -XPUT http://127.0.0.1:9200/索引名称/_settings -d '{ "index" : { "max_result_window" : 1000000}}'
+```
+-- 删除语句示例
+```
+curl -X POST  http://127.0.0.1:9200/索引名称/_delete_by_query?pretty -H 'Content-Type: application/json' -d '{"query": {"bool":{"filter":[{"bool":{"must":[{"match_phrase":{"id":{"query":"查询条件"}}}]}}]}},"_source":{"include":["*"]}}'  
 ```
 -- Tips
 1. 时间默认为ms
