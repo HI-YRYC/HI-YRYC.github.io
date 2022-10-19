@@ -136,7 +136,7 @@ public class DailyRollingFileAppender2 extends DailyRollingFileAppender {
     }
 
     void rollOver() throws IOException {
-
+	//此处为删除多余日志文件
         if (this.maxBackupIndex <= 0) {
             return;
         }
@@ -172,6 +172,36 @@ public class DailyRollingFileAppender2 extends DailyRollingFileAppender {
                     });
         } catch (Exception e) {
             e.printStackTrace();
+        }
+	
+	//此处为重命名
+        if (this.datePattern == null) {
+            this.errorHandler.error("Missing DatePattern option in rollOver().");
+        } else {
+            String datedFilename = this.fileName + this.sdf.format(this.now);
+            if (!this.scheduledFilename.equals(datedFilename)) {
+                this.closeFile();
+                File target = new File(this.scheduledFilename);
+                if (target.exists()) {
+                    target.delete();
+                }
+
+                File file2 = new File(this.fileName);
+                boolean result = file2.renameTo(target);
+                if (result) {
+                    LogLog.debug(this.fileName + " -> " + this.scheduledFilename);
+                } else {
+                    LogLog.error("Failed to rename [" + this.fileName + "] to [" + this.scheduledFilename + "].");
+                }
+
+                try {
+                    this.setFile(this.fileName, true, this.bufferedIO, this.bufferSize);
+                } catch (IOException var6) {
+                    this.errorHandler.error("setFile(" + this.fileName + ", true) call failed.");
+                }
+
+                this.scheduledFilename = datedFilename;
+            }
         }
     }
 
